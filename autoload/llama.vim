@@ -1,6 +1,6 @@
 " colors (adjust to your liking)
-highlight llama_hl_hint guifg=#ff772f ctermfg=202
-highlight llama_hl_info guifg=#77ff2f ctermfg=119
+highlight default llama_hl_hint guifg=#ff772f ctermfg=202
+highlight default llama_hl_info guifg=#77ff2f ctermfg=119
 
 " general parameters:
 "
