@@ -20,7 +20,8 @@ Start the llama.cpp server with a FIM-compatible model. For example:
 
 $ llama-server \
         -m {model.gguf} --port 8012 -ngl 99 -fa -dt 0.1 \
-        --ubatch-size 512 --batch-size 1024 --cache-reuse 256
+        --ubatch-size 512 --batch-size 1024 \
+        --ctx-size 0 --cache-reuse 256
 
 --batch-size [512, model max context]
 
@@ -32,6 +33,12 @@ around the cursor, which will result in faster processing.
 
 Chunks the batch into smaller chunks for faster processing depends on the
 specific hardware. Use llama-bench to profile and determine the best size.
+
+--ctx-size [1024, model max context], 0 - use model max context
+
+The maximum amount of context that the server will use. Ideally, this should
+be the same as the model's max context size, but if your device does not have
+enough memory to handle the full context, you can try to reduce this value.
 
 --cache-reuse (ge:llama_config.n_predict, 1024]
 

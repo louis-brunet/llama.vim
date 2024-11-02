@@ -534,11 +534,12 @@ function! s:fim_on_stdout(pos_x, pos_y, is_auto, job_id, data, event = v:null)
         return
     endif
 
-    if s:job_error || len(l:raw) == 0
-        let l:raw = json_encode({'content': '  llama.vim : cannot reach llama.cpp server. (:help llama)'})
+    " TODO: this does not seem to work as expected, so disabling for now
+    "if s:job_error || len(l:raw) == 0
+    "    let l:raw = json_encode({'content': '  llama.vim : cannot reach llama.cpp server. (:help llama)'})
 
-        let s:can_accept = v:false
-    endif
+    "    let s:can_accept = v:false
+    "endif
 
     if len(l:raw) == 0
         return
@@ -709,8 +710,9 @@ function! s:fim_on_stdout(pos_x, pos_y, is_auto, job_id, data, event = v:null)
             \ 'virt_text_win_col': virtcol('.')
             \ })
     elseif s:ghost_text_vim
-        let l:new_suffix = s:content[0]
-        if !empty(l:new_suffix)
+        let l:full_suffix = s:content[0]
+        if !empty(l:full_suffix)
+	    let l:new_suffix = l:full_suffix[0:-len(getline('.')[col('.')-1:])-1]
             call prop_add(s:pos_y, s:pos_x + 1, {
                 \ 'type': s:hlgroup_hint,
                 \ 'text': l:new_suffix
@@ -728,7 +730,6 @@ function! s:fim_on_stdout(pos_x, pos_y, is_auto, job_id, data, event = v:null)
             call prop_add(s:pos_y, 0, {
                 \ 'type': s:hlgroup_info,
                 \ 'text': l:info,
-                \ 'text_padding_left': col('$'),
                 \ 'text_wrap': 'truncate'
                 \ })
         endif
