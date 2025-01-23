@@ -105,3 +105,7 @@ The plugin aims to be very simple and lightweight and at the same time to provid
 
 - Initial implementation and techincal description: https://github.com/ggerganov/llama.cpp/pull/9787
 - Classic Vim support: https://github.com/ggerganov/llama.cpp/pull/9995
+
+## Other IDEs
+
+- VS Code: https://github.com/ggml-org/llama.vscode
