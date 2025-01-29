@@ -39,9 +39,49 @@ git clone https://github.com/ggml-org/llama.vim
 
 Then add `Plugin 'llama.vim'` to your *.vimrc* in the `vundle#begin()` section.
 
+#### lazy.nvim
+
+```lua
+    {
+        'ggml-org/llama.vim',
+    }
+```
+
+### Plugin configuration
+
+You can customize *llama.vim* by setting the `g:llama_config` variable.
+
+Examples:
+
+1. Disable the inline info:
+```vim
+	" put before llama.vim loads
+	let g:llama_config = { 'show_info': 0 }
+```
+
+2. Same thing but setting directly
+```vim
+	let g:llama_config.show_info = v:false
+```
+
+3. Disable auto FIM completion with lazy.nvim
+```lua
+    {
+        'ggml-org/llama.vim',
+        init = function()
+            vim.g.llama_config = {
+                auto_fim = false,
+            }
+        end,
+    }
+```
+
+Please refer to `:help llama_config` or the [source](./autoload/llama.vim)
+for the full list of options.
+
 ### llama.cpp setup
 
-The plugin requires a [llama.cpp](https://github.com/ggerganov/llama.cpp) server instance to be running at [`g:llama_config.endpoint`](https://github.com/ggml-org/llama.vim/blob/7d3359077adbad4c05872653973c3ceb09f18ad9/autoload/llama.vim#L34-L36)
+The plugin requires a [llama.cpp](https://github.com/ggerganov/llama.cpp) server instance to be running at [`g:llama_config.endpoint`](https://github.com/ggml-org/llama.vim/blob/master/autoload/llama.vim#L37).
 
 #### Mac OS
 
@@ -61,9 +101,8 @@ Here are recommended settings, depending on the amount of VRAM that you have:
 
   ```bash
   llama-server \
-      --hf-repo ggml-org/Qwen2.5-Coder-7B-Q8_0-GGUF \
-      --hf-file qwen2.5-coder-7b-q8_0.gguf \
-      --port 8012 -ngl 99 -fa -ub 1024 -b 1024 -dt 0.1 \
+      -hf ggml-org/Qwen2.5-Coder-7B-Q8_0-GGUF \
+      --port 8012 -ngl 99 -fa -ub 1024 -b 1024 \
       --ctx-size 0 --cache-reuse 256
   ```
 
@@ -71,9 +110,17 @@ Here are recommended settings, depending on the amount of VRAM that you have:
 
   ```bash
   llama-server \
-      --hf-repo ggml-org/Qwen2.5-Coder-1.5B-Q8_0-GGUF \
-      --hf-file qwen2.5-coder-1.5b-q8_0.gguf \
-      --port 8012 -ngl 99 -fa -ub 1024 -b 1024 -dt 0.1 \
+      -hf ggml-org/Qwen2.5-Coder-3B-Q8_0-GGUF \
+      --port 8012 -ngl 99 -fa -ub 1024 -b 1024 \
+      --ctx-size 0 --cache-reuse 256
+  ```
+
+- Less than 8GB VRAM:
+
+  ```bash
+  llama-server \
+      -hf ggml-org/Qwen2.5-Coder-1.5B-Q8_0-GGUF \
+      --port 8012 -ngl 99 -fa -ub 1024 -b 1024 \
       --ctx-size 0 --cache-reuse 256
   ```
 
@@ -91,7 +138,7 @@ The plugin requires FIM-compatible models: [HF collection](https://huggingface.c
 
 <img width="1512" alt="image" src="https://github.com/user-attachments/assets/0ccb93c6-c5c5-4376-a5a3-cc99fafc5eef">
 
-The orange text is the generated suggestion. The green text contains performance stats for the FIM request: the currently used context is `15186` tokens and the maximum is `32768`. There are `30` chunks in the ring buffer with extra context (out of `64`). So far, `1` chunk has been evicted in the current session and there are `0` chunks in queue. The newly computed prompt tokens for this request were `260` and the generated tokens were `25`. It took `1245 ms` to generate this suggestion after entering the letter `c` on the current line.
+The orange text is the generated suggestion. The green text contains performance stats for the FIM request: the currently used context is `15186` tokens and the maximum is `32768`. There are `30` chunks in the ring buffer with extra context (out of `64`). So far, `1` chunk has been evicted in the current session and there are `0` chunks in queue. The newly computed prompt tokens for this request were `260` and the generated tokens were `24`. It took `1245 ms` to generate this suggestion after entering the letter `c` on the current line.
 
 ### Using `llama.vim` on M2 Ultra with `Qwen2.5-Coder 7B Q8_0`:
 
