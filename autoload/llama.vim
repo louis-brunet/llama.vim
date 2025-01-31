@@ -1,3 +1,4 @@
+" vim: ts=4 sts=4 expandtab
 " colors (adjust to your liking)
 highlight default llama_hl_hint guifg=#ff772f ctermfg=202
 highlight default llama_hl_info guifg=#77ff2f ctermfg=119
@@ -318,7 +319,7 @@ function! s:ring_update()
         \ "--request", "POST",
         \ "--url", g:llama_config.endpoint,
         \ "--header", "Content-Type: application/json",
-        \ "--data", l:request
+        \ "--data", "@-",
         \ ]
     if exists ("g:llama_config.api_key") && len("g:llama_config.api_key") > 0
         call extend(l:curl_command, ['--header', 'Authorization: Bearer ' .. g:llama_config.api_key])
@@ -326,9 +327,14 @@ function! s:ring_update()
 
     " no callbacks because we don't need to process the response
     if s:ghost_text_nvim
-        call jobstart(l:curl_command, {})
+        let jobid = jobstart(l:curl_command, {})
+        call chansend(jobid, l:request)
+        call chanclose(jobid, 'stdin')
     elseif s:ghost_text_vim
-        call job_start(l:curl_command, {})
+        let jobid = job_start(l:curl_command, {})
+        let channel = job_getchannel(jobid)
+        call ch_sendraw(channel, l:request)
+        call ch_close_in(channel)
     endif
 endfunction
 
@@ -444,7 +450,7 @@ function! llama#fim(is_auto, cache) abort
         \ "--request", "POST",
         \ "--url", g:llama_config.endpoint,
         \ "--header", "Content-Type: application/json",
-        \ "--data", l:request
+        \ "--data", "@-",
         \ ]
     if exists ("g:llama_config.api_key") && len("g:llama_config.api_key") > 0
         call extend(l:curl_command, ['--header', 'Authorization: Bearer ' .. g:llama_config.api_key])
@@ -504,11 +510,17 @@ function! llama#fim(is_auto, cache) abort
                 \ 'on_exit':   function('s:fim_on_exit'),
                 \ 'stdout_buffered': v:true
                 \ })
+            call chansend(s:current_job, l:request)
+            call chanclose(s:current_job, 'stdin')
         elseif s:ghost_text_vim
             let s:current_job = job_start(l:curl_command, {
                 \ 'out_cb':    function('s:fim_on_stdout', [l:hash, a:cache, s:pos_x, s:pos_y, a:is_auto]),
                 \ 'exit_cb':   function('s:fim_on_exit')
                 \ })
+
+            let channel = job_getchannel(s:current_job)
+            call ch_sendraw(channel, l:request)
+            call ch_close_in(channel)
         endif
     endif
 
