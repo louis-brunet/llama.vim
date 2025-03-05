@@ -64,7 +64,7 @@ Examples:
 	let g:llama_config.show_info = v:false
 ```
 
-3. Disable auto FIM completion with lazy.nvim
+3. Disable auto FIM (Fill-In-the-Middle) completion with lazy.nvim
 ```lua
     {
         'ggml-org/llama.vim',
@@ -74,6 +74,11 @@ Examples:
             }
         end,
     }
+```
+
+4. Changing accept line keymap
+```vim
+	let g:llama_config.keymap_accept_full = "<C-S>"
 ```
 
 Please refer to `:help llama_config` or the [source](./autoload/llama.vim)
@@ -100,28 +105,19 @@ Here are recommended settings, depending on the amount of VRAM that you have:
 - More than 16GB VRAM:
 
   ```bash
-  llama-server \
-      -hf ggml-org/Qwen2.5-Coder-7B-Q8_0-GGUF \
-      --port 8012 -ngl 99 -fa -ub 1024 -b 1024 \
-      --ctx-size 0 --cache-reuse 256
+  llama-server --fim-qwen-7b-default
   ```
 
 - Less than 16GB VRAM:
 
   ```bash
-  llama-server \
-      -hf ggml-org/Qwen2.5-Coder-3B-Q8_0-GGUF \
-      --port 8012 -ngl 99 -fa -ub 1024 -b 1024 \
-      --ctx-size 0 --cache-reuse 256
+  llama-server --fim-qwen-3b-default
   ```
 
 - Less than 8GB VRAM:
 
   ```bash
-  llama-server \
-      -hf ggml-org/Qwen2.5-Coder-1.5B-Q8_0-GGUF \
-      --port 8012 -ngl 99 -fa -ub 1024 -b 1024 \
-      --ctx-size 0 --cache-reuse 256
+  llama-server --fim-qwen-1.5b-default
   ```
 
 Use `:help llama` for more details.
