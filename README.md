@@ -6,7 +6,7 @@ Local LLM-assisted text completion.
 
 ---
 
-![llama vim-swift](https://github.com/user-attachments/assets/206c8399-ff73-495d-ba67-65725138c021)
+![llama vim-spec-1](https://github.com/user-attachments/assets/404ebc2a-e4b8-4119-999b-e5365ec3208d)
 
 ## Features
 
@@ -17,35 +17,37 @@ Local LLM-assisted text completion.
 - Control max text generation time
 - Configure scope of context around the cursor
 - Ring context with chunks from open and edited files and yanked text
-- [Supports very large contexts even on low-end hardware via smart context reuse](https://github.com/ggerganov/llama.cpp/pull/9787)
+- [Supports very large contexts even on low-end hardware via smart context reuse](https://github.com/ggml-org/llama.cpp/pull/9787)
+- Speculative FIM support
+- Speculative Decoding support
 - Display performance stats
 
 ## Installation
 
 ### Plugin setup
 
-#### vim-plug
+- vim-plug
 
-```vim
-Plug 'ggml-org/llama.vim'
-```
+    ```vim
+    Plug 'ggml-org/llama.vim'
+    ```
 
-#### Vundle
+- Vundle
 
-```bash
-cd ~/.vim/bundle
-git clone https://github.com/ggml-org/llama.vim
-```
+    ```bash
+    cd ~/.vim/bundle
+    git clone https://github.com/ggml-org/llama.vim
+    ```
 
-Then add `Plugin 'llama.vim'` to your *.vimrc* in the `vundle#begin()` section.
+    Then add `Plugin 'llama.vim'` to your *.vimrc* in the `vundle#begin()` section.
 
-#### lazy.nvim
+- lazy.nvim
 
-```lua
+    ```lua
     {
         'ggml-org/llama.vim',
     }
-```
+    ```
 
 ### Plugin configuration
 
@@ -54,18 +56,21 @@ You can customize *llama.vim* by setting the `g:llama_config` variable.
 Examples:
 
 1. Disable the inline info:
-```vim
-	" put before llama.vim loads
-	let g:llama_config = { 'show_info': 0 }
-```
+
+    ```vim
+    " put before llama.vim loads
+    let g:llama_config = { 'show_info': 0 }
+    ```
 
 2. Same thing but setting directly
-```vim
-	let g:llama_config.show_info = v:false
-```
+
+    ```vim
+    let g:llama_config.show_info = v:false
+    ```
 
 3. Disable auto FIM (Fill-In-the-Middle) completion with lazy.nvim
-```lua
+
+    ```lua
     {
         'ggml-org/llama.vim',
         init = function()
@@ -74,19 +79,20 @@ Examples:
             }
         end,
     }
-```
+    ```
 
 4. Changing accept line keymap
-```vim
-	let g:llama_config.keymap_accept_full = "<C-S>"
-```
+
+    ```vim
+    let g:llama_config.keymap_accept_full = "<C-S>"
+    ```
 
 Please refer to `:help llama_config` or the [source](./autoload/llama.vim)
 for the full list of options.
 
 ### llama.cpp setup
 
-The plugin requires a [llama.cpp](https://github.com/ggerganov/llama.cpp) server instance to be running at [`g:llama_config.endpoint`](https://github.com/ggml-org/llama.vim/blob/master/autoload/llama.vim#L37).
+The plugin requires a [llama.cpp](https://github.com/ggml-org/llama.cpp) server instance to be running at [`g:llama_config.endpoint`](https://github.com/ggml-org/llama.vim/blob/master/autoload/llama.vim#L37).
 
 #### Mac OS
 
@@ -96,7 +102,7 @@ brew install llama.cpp
 
 #### Any other OS
 
-Either build from source or use the latest binaries: https://github.com/ggerganov/llama.cpp/releases
+Either build from source or use the latest binaries: https://github.com/ggml-org/llama.cpp/releases
 
 ### llama.cpp settings
 
@@ -142,12 +148,16 @@ https://github.com/user-attachments/assets/1f1eb408-8ac2-4bd2-b2cf-6ab7d6816754
 
 Demonstrates that the global context is accumulated and maintained across different files and showcases the overall latency when working in a large codebase.
 
+### Another example on a small Swift code
+
+![llama vim-swift](https://github.com/user-attachments/assets/206c8399-ff73-495d-ba67-65725138c021)
+
 ## Implementation details
 
 The plugin aims to be very simple and lightweight and at the same time to provide high-quality and performant local FIM completions, even on consumer-grade hardware. Read more on how this is achieved in the following links:
 
-- Initial implementation and techincal description: https://github.com/ggerganov/llama.cpp/pull/9787
-- Classic Vim support: https://github.com/ggerganov/llama.cpp/pull/9995
+- Initial implementation and techincal description: https://github.com/ggml-org/llama.cpp/pull/9787
+- Classic Vim support: https://github.com/ggml-org/llama.cpp/pull/9995
 
 ## Other IDEs
 
